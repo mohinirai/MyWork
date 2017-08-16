@@ -2,12 +2,15 @@ package com.cg.billing.beans;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Plan {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int planID;
 	private int monthlyRental, freeLocalCalls, freeStdCalls, freeLocalSMS, freeStdSMS, freeInternetDataUsageUnits;
 	private float localCallRate, stdCallRate, localSMSRate, stdSMSRate, internetDataUsageRate;

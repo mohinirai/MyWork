@@ -70,4 +70,6 @@ public interface IBillingServices {
 		public double insertMonthlybill(int customerID, long mobileNo, Bill bill) throws BillingServicesDownException;
 
 		boolean authenticateCustomer(Customer customer) throws CustomerDetailsNotFoundException, BillingServicesDownException;
+
+		Plan acceptPlanDetails(Plan plan) throws BillingServicesDownException;
 }

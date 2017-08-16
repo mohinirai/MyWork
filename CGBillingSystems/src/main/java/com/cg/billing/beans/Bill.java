@@ -12,6 +12,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Bill {
 	
+	//hgf
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int billID; 
@@ -199,6 +201,11 @@ public class Bill {
 		this.internetDataUsageAmount = internetDataUsageAmount;
 		this.servicesTax = servicesTax;
 		this.vat = vat;
+	}
+
+	public Bill(int i, int j, int k, int l, int m, int n, String string, int o, int p, int q, int r, int s, int t,
+			int u, int v) {
+		// TODO Auto-generated constructor stub
 	}
 	
 	

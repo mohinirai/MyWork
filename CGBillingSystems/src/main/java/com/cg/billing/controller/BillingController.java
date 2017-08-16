@@ -31,7 +31,7 @@ public class BillingController {
 	private IBillingServices services;
 
 	@RequestMapping(value = "/acceptCustomerDetail", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public ResponseEntity<String> acceptProductDetail(@ModelAttribute Customer customer)
+	public ResponseEntity<String> acceptCustomerDetail(@ModelAttribute Customer customer)
 			throws BillingServicesDownException {
 		services.acceptCustomerDetails(customer);
 		return new ResponseEntity<>("Customer details succesfully added", HttpStatus.OK);
@@ -136,4 +136,9 @@ public class BillingController {
 		return new ResponseEntity<>("Monthly Bill : " + amount, HttpStatus.OK);
 	}
 
+	@RequestMapping(value="/acceptPlanDetails",method= RequestMethod.POST,consumes=  MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public ResponseEntity<String> acceptPlanDetails(@ModelAttribute Plan plan) throws BillingServicesDownException{
+		services.acceptPlanDetails(plan);
+		return new ResponseEntity<String>("Plan added successfully", HttpStatus.OK);
+	}
 }

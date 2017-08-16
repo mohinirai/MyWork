@@ -74,7 +74,7 @@ public class BillingServicesImpl implements IBillingServices {
 
 		bill.setServicesTax((float) (0.1 * amount));
 		bill.setVat((float) (0.06 * amount));
-		bill.setTotalBillAmount(plan.getPlanID() + amount + bill.getServicesTax() + bill.getVat());
+		bill.setTotalBillAmount(plan.getMonthlyRental() + amount + bill.getServicesTax() + bill.getVat());
 
 		return dao.insertMonthlybill(customerID, mobileNo, bill);
 	}
@@ -161,5 +161,11 @@ public class BillingServicesImpl implements IBillingServices {
 	@Override
 	public double insertMonthlybill(int customerID, long mobileNo, Bill bill) throws BillingServicesDownException {
 		return dao.insertMonthlybill(customerID, mobileNo, bill);
+	}
+
+	@Override
+	public Plan acceptPlanDetails(Plan plan) throws BillingServicesDownException {
+		
+		return dao.findPlan(dao.insertPlan(plan));
 	}
 }

@@ -36,6 +36,11 @@ public class PostpaidAccount {
 	@JsonIgnore
 	private Map<Integer, Bill> bills = new HashMap<>();
 
+	
+	public PostpaidAccount(int mobileNo2, Plan plan1, Bill bill1) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public long getMobileNo() {
 		return mobileNo;
 	}
@@ -81,6 +86,7 @@ public class PostpaidAccount {
 		super();
 	}
 
+	
 	@Override
 	public String toString() {
 		return "PostpaidAccount [mobileNo=" + mobileNo + ", plan=" + plan + ", customer=" + customer + ", bills="
