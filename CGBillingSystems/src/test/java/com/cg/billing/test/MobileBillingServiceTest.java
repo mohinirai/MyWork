@@ -1,6 +1,7 @@
 package com.cg.billing.test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.After;
@@ -11,12 +12,14 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import com.cg.billing.beans.Address;
 import com.cg.billing.beans.Bill;
 import com.cg.billing.beans.Customer;
 import com.cg.billing.beans.Plan;
 import com.cg.billing.beans.PostpaidAccount;
+import com.cg.billing.dao.BillingDaoImpl;
 import com.cg.billing.dao.IBillingDao;
 import com.cg.billing.exceptions.BillDetailsNotFoundException;
 import com.cg.billing.exceptions.BillingServicesDownException;
@@ -29,19 +32,20 @@ import com.cg.billing.services.IBillingServices;
 
 public class MobileBillingServiceTest {
 	private static IBillingServices service;
+	private static IBillingDao dao;
 	ArrayList<Customer> customerList;
 	ArrayList<Plan> planList;
 	
 	@BeforeClass
 	public static void setUpBillingServices(){
-		/*dao = Mockito.mock(BillingDAOServices.class);
-		service = new BillingServicesImpl(dao);		*/
+		dao = Mockito.mock(IBillingDao.class);
+		service = new BillingServicesImpl(dao);		
 		
-		service = new BillingServicesImpl();
+		//service = new BillingServicesImpl();
 	}
 	
 	@Before
-	public void setUpBillingData() throws BillingServicesDownException{
+	public void setUpBillingData() throws BillingServicesDownException, PostpaidAccountNotFoundException{
 		Bill bill1= new Bill(01, 5, 0, 9, 0, 9887, "jan", 500, 5, 0, 56, 0, 50, 50, 34);
 		Bill bill2= new Bill(02, 6, 0, 9, 0, 9887, "feb", 500, 5, 0, 56, 0, 50, 50, 34);
 		Bill bill3= new Bill(03, 7, 0, 9, 0, 9887, "march", 500, 5, 0, 56, 0, 50, 50, 34);
@@ -55,22 +59,27 @@ public class MobileBillingServiceTest {
 		planList.add(plan1);
 		planList.add(plan2);
 		
+		HashMap<Long, PostpaidAccount> allAccounts = new HashMap<>();
+		
 		PostpaidAccount ppa1 = new PostpaidAccount(98678986, plan1, bill1);
 		PostpaidAccount ppa2 = new PostpaidAccount(98788986, plan2, bill2);
-		//PostpaidAccount ppa3 = new PostpaidAccount(98788986, plan1, null);
+		PostpaidAccount ppa3 = new PostpaidAccount(98788986, plan1, new Bill());
+		
+		//allAccounts.put()
+		
 		
 		Address addr1 = new Address("lko", "up", 24566);
 		Address addr2 = new Address("agra", "up", 4738);
 		
 		customerList= new ArrayList<>();
-		Customer customer1 = new Customer(1001, "ram", "gupta", "ram.cg.com", "25/07/9111", "4344", addr1, ppa1);
-		Customer customer2 = new Customer(1002, "ramu", "gupta", "ram.cg.com", "25/07/9111", "4344", addr1, ppa2);
-	//	Customer customer3 = new Customer( "shyam", "gupta", "ram.cg.com", "25/07/9111", "4344", null, null);
+		Customer customer1 = new Customer(1001, "ram", "gupta", "ram.cg.com", "25/07/9111", "4344", addr1, new HashMap<>());
+		Customer customer2 = new Customer(1002, "ramu", "gupta", "ram.cg.com", "25/07/9111", "4344", addr1,new HashMap<>());
+		Customer customer3 = new Customer( "shyam", "gupta", "ram.cg.com", "25/07/9111", null);
 		
 		customerList.add(customer1);
 		customerList.add(customer2);
-/*
-		Mockito.when(dao.insertCustomer(new Customer( "shyam", "gupta", "ram.cg.com", "25/07/9111", "4344", null, null))).thenReturn(1003);
+
+		Mockito.when(dao.insertCustomer(new Customer( "shyam", "gupta", "ram.cg.com", "25/07/9111", null))).thenReturn(customer3);
 		Mockito.when(dao.insertPostPaidAccount(1001, ppa1)).thenReturn(98678986L);
 		Mockito.when(dao.insertPostPaidAccount(1234, ppa2)).thenReturn(0L);
 		Mockito.when(dao.insertPostPaidAccount(1001, ppa3)).thenReturn(0L);
@@ -93,9 +102,9 @@ public class MobileBillingServiceTest {
 		Mockito.when(dao.getCustomer(1001)).thenReturn(customer1);
 		Mockito.when(dao.getCustomerPostPaidAccounts(2345)).thenReturn(null);
 		Mockito.when(dao.getCustomerPostPaidAccounts(1001)).thenReturn(new ArrayList<>(customerList.get(1).getPostpaidAccounts().values()));
-		Mockito.when(dao.insertMonthlybill(2345, 1234567, new Bill(100,12,38,78,876,"fab",0,0, 0,0,0,0,0,0))).thenReturn(0.0);
-		Mockito.when(dao.insertMonthlybill(1001, 1234567, new Bill(100,12,38,78,876,"fab",0,0, 0,0,0,0,0,0))).thenReturn(0.0);
-		Mockito.when(dao.insertMonthlybill(1001, 98678986L, new Bill(100,12,38,78,876,"fab",0,0, 0,0,0,0,0,0))).thenReturn(0.0);
+		Mockito.when(dao.insertMonthlybill(2345, 1234567, new Bill(100,12,38,78,876,"feb",0,0, 0,0,0,0,0,0))).thenReturn(0.0);
+		Mockito.when(dao.insertMonthlybill(1001, 1234567, new Bill(100,12,38,78,876,"feb",0,0, 0,0,0,0,0,0))).thenReturn(0.0);
+		Mockito.when(dao.insertMonthlybill(1001, 98678986L, new Bill(100,12,38,78,876,"feb",0,0, 0,0,0,0,0,0))).thenReturn(0.0);
 		Mockito.when(dao.insertMonthlybill(1001, 98678986L, new Bill(100,12,38,78,876,"May",0,0, 0,0,0,0,0,0))).thenReturn(34234d);
 		Mockito.when(dao.deleteCustomer(2345)).thenReturn(false);
 		Mockito.when(dao.deleteCustomer(1001)).thenReturn(true);
@@ -105,7 +114,7 @@ public class MobileBillingServiceTest {
 		Mockito.when(dao.updatePostPaidAccount(2211,ppa2)).thenReturn(false);
 		Mockito.when(dao.updatePostPaidAccount(1001,ppa2)).thenReturn(false);
 		Mockito.when(dao.updatePostPaidAccount(1001,ppa3)).thenReturn(false);
-		Mockito.when(dao.updatePostPaidAccount(1001,ppa1)).thenReturn(true);*/
+		Mockito.when(dao.updatePostPaidAccount(1001,ppa1)).thenReturn(true);
 	}
 	
 	@Test
@@ -229,8 +238,9 @@ public class MobileBillingServiceTest {
 		Address addr1 = new Address("lko", "up", 24566);
 		Plan plan1 = new Plan(001, 200, 500, 300, 1000, 2000, 8000, 5, 9, 3, 5, 300, null, "jackpot");
 		Bill bill1= new Bill(01, 5, 0, 9, 0, 9887, "jan", 500, 5, 0, 56, 0, 50, 50, 34);
-		PostpaidAccount ppa1 = new PostpaidAccount(98678986, plan1, bill1);
-		Customer expectedResult= new Customer(1001, "ram", "gupta", "ram.cg.com", "25/07/9111", "4344", addr1, ppa1);
+		HashMap<Long,PostpaidAccount> accounts = new HashMap<>();
+		accounts.put(98678986l, new PostpaidAccount(98678986, plan1, bill1));
+		Customer expectedResult= new Customer(1001, "ram", "gupta", "ram.cg.com", "25/07/2011", "4344", addr1,accounts);
 		Customer actualResult= service.getCustomerDetails(1001);
 		assertEquals(expectedResult, actualResult);
 	}
@@ -327,10 +337,10 @@ public class MobileBillingServiceTest {
 		Address addr1 = new Address("lko", "up", 24566);
 		Plan plan1 = new Plan(001, 200, 500, 300, 1000, 2000, 8000, 5, 9, 3, 5, 300, null, "jackpot");
 		Bill bill1= new Bill(01, 5, 0, 9, 0, 9887, "jan", 500, 5, 0, 56, 0, 50, 50, 34);
-		PostpaidAccount ppa1 = new PostpaidAccount(98678986, plan1, bill1);
-		
+		HashMap<Long,PostpaidAccount> accounts = new HashMap<>();
+		accounts.put(98678986l, new PostpaidAccount(98678986, plan1, bill1));
 		boolean expectedResult=true;
-		boolean actualResult=service.authenticateCustomer( new Customer(1001, "ram", "gupta", "ram.cg.com", "25/07/9111", "4344", addr1, ppa1));
+		boolean actualResult=service.authenticateCustomer( new Customer(1001, "ram", "gupta", "ram.cg.com", "25/07/9111", "4344", addr1, accounts));
 		assertEquals(expectedResult, actualResult);
 	}
 	

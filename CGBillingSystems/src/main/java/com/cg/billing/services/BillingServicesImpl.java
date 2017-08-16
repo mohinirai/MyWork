@@ -11,6 +11,7 @@ import com.cg.billing.beans.Customer;
 import com.cg.billing.beans.Plan;
 import com.cg.billing.beans.PostpaidAccount;
 import com.cg.billing.dao.BillingDaoImpl;
+import com.cg.billing.dao.IBillingDao;
 import com.cg.billing.exceptions.BillDetailsNotFoundException;
 import com.cg.billing.exceptions.BillingServicesDownException;
 import com.cg.billing.exceptions.CustomerDetailsNotFoundException;
@@ -23,7 +24,11 @@ import com.cg.billing.exceptions.PostpaidAccountNotFoundException;
 public class BillingServicesImpl implements IBillingServices {
 
 	@Autowired
-	BillingDaoImpl dao;
+	IBillingDao dao;
+
+	public BillingServicesImpl(IBillingDao mockDao) {
+		dao = mockDao;
+	}
 
 	@Override
 	public List<Plan> getPlanAllDetails() throws BillingServicesDownException {

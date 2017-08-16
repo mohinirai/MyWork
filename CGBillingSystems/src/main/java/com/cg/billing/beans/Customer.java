@@ -78,13 +78,6 @@ public class Customer {
 		this.postpaidAccounts = postpaidAccounts;
 	}
 
-
-	public Customer(int i, String string, String string2, String string3, String string4, String string5, Address addr1,
-			PostpaidAccount ppa1) {
-		// TODO Auto-generated constructor stub
-	}
-
-
 	public int getCustomerID() {
 		return customerID;
 	}
